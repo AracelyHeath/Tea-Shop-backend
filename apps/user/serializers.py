@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True) 
 
     class Meta:
-        models=User
+        model=User
         fields=('name','email','password','token','token_expires')
 
 class UserSignUpSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class UserSignUpSerializer(serializers.ModelSerializer):
     token_expires = serializers.DateTimeField(read_only=True)
 
     class Meta:
-        models=User
+        model=User
         fields=('name','email','password','token','token_expires')
     
     def create(self, validated_data):
@@ -31,13 +31,13 @@ class UserSignUpSerializer(serializers.ModelSerializer):
 
 class UserSignInSerializer(serializers.ModelSerializer):
     name = serializers.CharField(read_only=True)
-    password = seriaizers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
     token = serializers.CharField(read_only=True)
     token_expires = serializers.DateTimeField(read_only=True)
     email = serializers.EmailField(read_only=True)
 
     class Meta:
-        models=User
+        model=User
         fields=('name','email','password','token','token_expires')
 
     def create (self, validated_data):
