@@ -14,3 +14,12 @@ class UserSignUp(generics.CreateAPIView):
 class UserList(CustomLoginRequiredMixin, generics.ListAPIView):
     queryset=User.objects.all()
     serializer_class=UserSerializer
+
+class UserSignIn(generics.CreateAPIView):
+    queryset=User.objects.all()
+    serializer_class=UserSignInSerializer
+
+class UserCheckLogin(CustomLoginRequiredMixin, generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        serializer=UserSerializer([request.login_user], many=True) 
+        return response(serializer.data[0])       

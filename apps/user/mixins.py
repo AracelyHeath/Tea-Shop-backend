@@ -10,20 +10,20 @@ class CustomLoginRequiredMixin():
             response= Response({'error':'please set auth token'},status=status.HTTP_404_NOT_FOUND)
             response.accepted_renderer= JSONRenderer()
             response.accepted_media_type= 'application/json'
-            response.rendered_context={}
+            response.renderer_context={}
             return response
         
         token= request.headers['Authorization']
         now= datetime.datetime.now()
-        login_user= User.objects.filter(token=token, token_expired__gt=now)
+        login_user= User.objects.filter(token=token, token_expires__gt=now)
 
         if len(login_user) == 0:
             response= Response({'error':'token is expired or invalid'},status=status.HTTP_404_NOT_FOUND)
             response.accepted_renderer= JSONRenderer()
             response.accepted_media_type= 'application/json'
-            response.rendered_context={}
+            response.renderer_context={}
             return response
 
         request.login_user= login_user[0]
-        return super().dispatch(self, request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
 
