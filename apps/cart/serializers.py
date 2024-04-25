@@ -6,7 +6,7 @@ class CartSerializer(serializers.ModelSerializer):
         model=Cart
         fields='__all__'
 
-class CartAddSerializer(serializer.ModelSerializer):
+class CartAddSerializer(serializers.ModelSerializer):
     class Meta:
         model=Cart
         fields:'__all__'

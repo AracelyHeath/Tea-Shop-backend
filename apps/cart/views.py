@@ -8,7 +8,7 @@ from rest_framework.renderers import JSONRenderer
 
 # Create your views here.
 class CartList(CustomLoginRequiredMixin, generics.ListAPIView):
-    queryset=cart.ojects.all()
+    queryset=Cart.objects.all()
     serializer_class = CartSerializer
 
     def get(self, request, *args, **kwargs):
@@ -17,16 +17,16 @@ class CartList(CustomLoginRequiredMixin, generics.ListAPIView):
 
 
 class CartAdd(CustomLoginRequiredMixin, generics.CreateAPIView):
-    queryset=cart.ojects.all()
+    queryset=Cart.objects.all()
     serializer_class = CartAddSerializer
 
     def post(self, request, *args, **kwargs):
         # set the user who login 
         request.data['user']= request.login_user.id
-        return self.create(request, *args. **kwargs)
+        return self.create(request, *args, **kwargs)
 
 class CartDelete(CustomLoginRequiredMixin, generics.DestroyAPIView):
-    queryset=cart.ojects.all()
+    queryset=Cart.objects.all()
     serializer_class = CartAddSerializer
 
     def delete(self, request, *args, **kwargs):
@@ -40,3 +40,20 @@ class CartDelete(CustomLoginRequiredMixin, generics.DestroyAPIView):
 
         return self.destroy(request, *args, **kwargs)    
 
+class CartUpdate(CustomLoginRequiredMixin, generics.UpdateAPIView):
+    queryset=Cart.objects.all()
+    serializer_class = CartAddSerializer
+
+    def update(self, request, *args, **kwargs):
+        cart=cart.objects.get(pk=self.kwargs['pk'])
+        if cart.user.id != request.login_user.id:
+            response=Response({'Error': 'You cannot update cart list not owned by you. Be Careful'}, status=status.HTTP_404_NOT_FOUND)
+            response.accepted_renderer=JSONRenderer()
+            response.accepted_media_type='application/json'
+            response.renderer_context={}
+            return response 
+
+        cart.quantity=request.data['quantity']
+        cart.save()
+        serializer=CartSerializer([cart], many=True)
+        return Response(serializer.data[0])
