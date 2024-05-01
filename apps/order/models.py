@@ -1,7 +1,7 @@
 from django.db import models
 from apps.item.models import Item
 from apps.user.models import User
-from apps.user.models import Cart
+from apps.cart.models import Cart
 
 # Create your models here.
 class Order(models.Model):
@@ -16,7 +16,7 @@ class Order(models.Model):
     city =models.CharField('City', max_length= 50, blank=False, null=False , db_index=True)
     state =models.CharField('State', max_length= 50, blank=False, null=False , db_index=True)
     postal_code= models.IntegerField('Postal_code', blank=False, null=False)
-    country = ('Country', max_length= 50, blank=False, null=False , db_index=True)
+    country = models.CharField('Country', max_length= 50, blank=False, null=False , db_index=True)
     telephone = models.IntegerField('Telephone', blank=False, null=False)
     updated_at = models.DateTimeField('Updated_at',  blank=True, auto_now=True)
     created_at = models.DateTimeField('Created_at', blank=True, auto_now_add=True)    
@@ -24,9 +24,9 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     class Meta(object):
-        db_table'order_item'
+        db_table='order_item'
 
-    order = models.ForeignKey(Order, )
+    order = models.ForeignKey(Order, db_index=True, on_delete=models.CASCADE )
     item =models.ForeignKey(Item, db_index=True, on_delete=models.CASCADE)
     quantity = models.IntegerField('Quantity', blank=False, null=False)
     updated_at = models.DateTimeField('Updated_at',  blank=True, auto_now=True)
